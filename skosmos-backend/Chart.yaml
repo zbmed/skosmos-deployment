@@ -1,0 +1,6 @@
+apiVersion: v2
+name: skosmos-backend
+description: A Helm chart to deploy the skosmos-backend.
+type: application
+version: 0.0.1
+appVersion: "1.0.0"

@@ -28,6 +28,8 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+          securityContext:
+            runAsUser: 0
           volumeMounts:
             - mountPath: /etc/varnish/default.vcl
               name: fuseki-cache-cm0

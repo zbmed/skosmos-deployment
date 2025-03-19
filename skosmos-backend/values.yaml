@@ -1,0 +1,13 @@
+ingress:
+  dns: skosmos-backend.qa.km.k8s.zbmed.de
+  enableSSL:
+  certIssuer:
+  path: /
+frontend:
+  apiURL:
+  imagePullSecret:
+images:
+  frontend:
+auth:
+  enabled:
+  secretName:
