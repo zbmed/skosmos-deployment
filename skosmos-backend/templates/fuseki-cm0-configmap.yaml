@@ -1,4 +1,9 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-fuseki-config
+  labels:
+    app: {{ .Release.Name }}-fuseki
 data:
   skosmos.ttl: |
     @prefix :      <http://base/#> .
@@ -74,10 +79,4 @@ data:
              ]
          )
     .
-kind: ConfigMap
-metadata:
-  annotations:
-    use-subpath: "true"
-  labels:
-    io.kompose.service: fuseki
-  name: fuseki-cm0
+

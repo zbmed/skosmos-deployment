@@ -1,10 +1,15 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Release.Name }}-fuseki-cache-config
+  name: {{ .Release.Name }}-fuseki-cache-config
 data:
   varnish-default.vcl: |
     vcl 4.0;
 
     backend default {
-        .host = "fuseki";
+        .host = "{{ .Release.Name }}-fuseki";
         .port = "3030";
     }
 
@@ -14,10 +19,4 @@ data:
         # always gzip before storing, to save space in the cache
         set beresp.do_gzip = true;
     }
-kind: ConfigMap
-metadata:
-  annotations:
-    use-subpath: "true"
-  labels:
-    io.kompose.service: fuseki-cache
-  name: fuseki-cache-cm0
+
