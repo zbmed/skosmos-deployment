@@ -111,6 +111,16 @@ data:
     skosmos:defaultLanguage "de";
     void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
     skosmos:sparqlGraph <http://zbw.eu/stw/> .
+
+    :voc4cat a skosmos:Vocabulary, void:Dataset ;
+    dc:title "Voc4Cat - A SKOS vocabulary for Catalysis"@en ;
+    skosmos:shortName "Voc4Cat";
+    dc:subject :cat_general ;
+    void:uriSpace "https://nfdi4cat.github.io/voc4cat/latest/voc4cat/index.html";
+    skosmos:language "en";
+    skosmos:defaultLanguage "en";
+    void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
+    skosmos:sparqlGraph <https://w3id.org/nfdi4cat/voc4cat> .
 kind: ConfigMap
 metadata:
   labels:
