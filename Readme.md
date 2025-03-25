@@ -23,7 +23,7 @@ Expose the service `<name>-skosmos-fuseki` created with the helm chart (see abov
 kubectl expose deployment <name>-skosmos-fuseki --type=LoadBalancer --name=<name>-skosmos-fuseki-exposed
 ```
 
-Obtain the generated external IP:
+Obtain the generated external IP. The external IP might be listed as "<pending>" at first, as this might take a while.
 ```
 kubectl get services <name>-skosmos-fuseki-exposed
   ```
