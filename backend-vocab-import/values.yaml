@@ -1,0 +1,9 @@
+ingress:
+  dns:
+  enableSSL:
+  certIssuer:
+  path: /
+  backendName:
+auth:
+  enabled:
+  secretName:

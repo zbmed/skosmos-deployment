@@ -7,25 +7,49 @@ The helm chart is based on the procedure to run Skosmos locally with docker from
 
 To deploy both backend and frontend, run from the root folder of this repository:
 ```
-helm install <name>-skosmos \
---set-json='ingress.dns="<name>-skosmos.qa.km.k8s.zbmed.de"' \
+helm install <name> \
+--set-json='ingress.dns="<name>.qa.km.k8s.zbmed.de"' \
 skosmos-backend
 ```
 
-The frontend will be available at `<name>-skosmos.qa.km.k8s.zbmed.de`.
+The frontend will be available at `<name>.qa.km.k8s.zbmed.de`.
 
-The API will be available at `<name>-skosmos.qa.km.k8s.zbmed.de/rest/v1`
+The API will be available at `<name>.qa.km.k8s.zbmed.de/rest/v1`
 
-### Load vocabularies
+The services can be terminated by running:
 
-Expose the service `<name>-skosmos-fuseki` created with the helm chart (see above).
 ```
-kubectl expose deployment <name>-skosmos-fuseki --type=LoadBalancer --name=<name>-skosmos-fuseki-exposed
+helm uninstall <name>
+```
+
+### Load Voc4Cat vocabulary
+
+The Voc4Cat vocabulary can be automatically loaded using the helm chart located at `backend-vocab-import/`.
+Having an already running Skosmos backend with the name `<name>` (see above), just run (where `<otherName>` can be chosen arbitrarily, but cannot be the same as `<name>`):
+
+```
+helm install <otherName> \
+--set-json='ingress.backendName="<name>"' \
+backend-vocab-import
+```
+
+The Voc4Cat vocabulary should now be available.
+Afterwards, the helm chart can be uninstalled again (even if the Skosmos backend shall continue to run):
+
+```
+helm uninstall <otherName>
+```
+
+### Load vocabularies manually
+
+Expose the service `<name>-fuseki` created with the helm chart (see above).
+```
+kubectl expose deployment <name>-fuseki --type=LoadBalancer --name=<name>-fuseki-exposed
 ```
 
 Obtain the generated external IP. The external IP might be listed as "<pending>" at first, as this might take a while.
 ```
-kubectl get services <name>-skosmos-fuseki-exposed
+kubectl get services <name>-fuseki-exposed
   ```
 
 Use the external IP and port to load vocabulary into the server.
