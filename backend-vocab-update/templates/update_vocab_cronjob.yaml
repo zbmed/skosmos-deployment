@@ -20,11 +20,9 @@ spec:
             - sh
             - -c
             - |
-              echo "Importing the voc4cat vocabulary"
-              curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
-              curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
+              ls
 
-              echo "Fetching and storing latest release"
+              echo "Fetching latest release"
 
               REPO_NAME="nfdi4cat/voc4cat"
 
@@ -39,9 +37,19 @@ spec:
                 RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "([^"]+)".*/\1/')
               fi
 
-              echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
-              echo "Stored the following release name in currently_loaded_release.txt: $(cat /data/version/currently_loaded_release.txt)"
-              #curl -X POST -H "Content-Type: text/plain" -T currently_loaded_release.txt -G "${FUSEKI_URL}/skosmos/data" --data-urlencode graph=https://w3id.org/nfdi4cat/mytextgraph
+              # Comparing latest and currently used release
+              #if [[ "$RELEASE_NAME" = "$(cat /data/version/currently_loaded_release.txt)" ]]; then
+              if [[ "a" = "b" ]]; then
+                echo "Release is up to date"
+              else
+                # Update the loaded vocabulary
+                echo "Release is outdated. Updating the voc4cat vocabulary..."
+                curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
+                curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
+
+                # Update the stored version name
+                echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
+              fi
           volumeMounts:
             - mountPath: data/version
               name: version-storage
