@@ -35,6 +35,8 @@ spec:
               mountPath: /fuseki/config
             - name: data-storage
               mountPath: /fuseki/databases
+            - mountPath: /fuseki/version
+              name: version-storage
       restartPolicy: Always
       volumes:
         - name: config-volume
@@ -43,6 +45,9 @@ spec:
         - name: data-storage
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-fuseki-pvc
+        - name: version-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-version-pvc
 
 ---
 

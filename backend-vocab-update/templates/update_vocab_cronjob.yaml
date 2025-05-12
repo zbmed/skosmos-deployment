@@ -1,68 +1,73 @@
 apiVersion: batch/v1
-#kind: CronJob
-kind: Job
+kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-backend-vocab-import
+  name: {{ .Release.Name }}-backend-vocab-update
 spec:
-  #schedule: "0 0 * * *"
-  #successfulJobsHistoryLimit: 0
-  #jobTemplate:
-  #  spec:
-  template:
+  schedule: "0 0 * * *" # every day
+  #schedule: "* * * * *" # every minute (for testing purposes)
+  successfulJobsHistoryLimit: 0
+  jobTemplate:
     spec:
-      containers:
-        - image: redhat/ubi8
-          name: backend-vocab-import-container
-          env:
-            - name: FUSEKI_URL
-              value: http://{{ .Values.ingress.backendName }}-fuseki:9030
-          command:
-            - sh
-            - -c
-            - |
-              ls
+      template:
+        spec:
+          containers:
+            - image: redhat/ubi8
+              name: backend-vocab-import-container
+              env:
+                - name: FUSEKI_URL
+                  value: http://{{ .Values.ingress.backendName }}-fuseki:9030
+              command:
+                - sh
+                - -c
+                - |
+                  ls
 
-              echo "Fetching latest release"
+                  echo "Fetching latest release"
 
-              REPO_NAME="nfdi4cat/voc4cat"
+                  REPO_NAME="nfdi4cat/voc4cat"
 
-              # Fetch the latest release info from GitHub API
-              RELEASE_INFO=$(curl -s "https://api.github.com/repos/${REPO_NAME}/releases/latest")
+                  # Fetch the latest release info from GitHub API
+                  RELEASE_INFO=$(curl -s "https://api.github.com/repos/${REPO_NAME}/releases/latest")
 
-              # Extract and clean the release name
-              RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "Release ([^"]+)".*/\1/')
+                  # Extract and clean the release name
+                  RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "Release ([^"]+)".*/\1/')
 
-              # Fallback if no "Release " prefix
-              if [[ -z "$RELEASE_NAME" ]]; then
-                RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "([^"]+)".*/\1/')
-              fi
+                  # Fallback if no "Release " prefix
+                  if [[ -z "$RELEASE_NAME" ]]; then
+                    RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "([^"]+)".*/\1/')
+                  fi
 
-              # Comparing latest and currently used release
-              #if [[ "$RELEASE_NAME" = "$(cat /data/version/currently_loaded_release.txt)" ]]; then
-              if [[ "a" = "b" ]]; then
-                echo "Release is up to date"
-              else
-                # Update the loaded vocabulary
-                echo "Release is outdated. Updating the voc4cat vocabulary..."
-                curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
-                curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
+                  # Comparing latest and currently used release
+                  if [[ -f /data/version/currently_loaded_release.txt ]] && [[ "$RELEASE_NAME" = "$(cat /data/version/currently_loaded_release.txt)" ]]; then
+                    echo "Release is up to date"
 
-                # Update the stored version name
-                echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
-              fi
-          volumeMounts:
-            - mountPath: data/version
-              name: version-storage
-          resources:
-            requests:
-              memory: 1900Mi
-              cpu: 8m
-            limits:
-              memory: 3800Mi
-              cpu: 16m
-      restartPolicy: Never
-      volumes:
-        - name: version-storage
-          persistentVolumeClaim:
-            claimName: {{ .Values.ingress.backendName }}-version-pvc
-  backoffLimit: 1
+                    # Update check
+                    # echo "Run of cronjob at $(date +%H:%M:%S): Already up to date" >> /data/version/log.txt
+                  else
+                    # Update the loaded vocabulary
+                    echo "Release is outdated. Updating the voc4cat vocabulary..."
+                    curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
+                    curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
+
+                    # Update the stored version name
+                    echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
+
+                    # Update check
+                    # echo "Run of cronjob at $(date +%H:%M:%S): Has been updated" >> /data/version/log.txt
+                  fi
+              volumeMounts:
+                - mountPath: data/version
+                  name: version-storage
+              resources:
+                requests:
+                  memory: 1900Mi
+                  cpu: 8m
+                limits:
+                  memory: 3800Mi
+                  cpu: 16m
+          restartPolicy: Never
+          volumes:
+            - name: version-storage
+              persistentVolumeClaim:
+                claimName: {{ .Values.ingress.backendName }}-version-pvc
+      backoffLimit: 1

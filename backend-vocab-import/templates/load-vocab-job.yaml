@@ -39,9 +39,12 @@ spec:
                 RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "([^"]+)".*/\1/')
               fi
 
+              # Update the stored version name
               echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
-              echo "Stored the following release name in currently_loaded_release.txt: $(cat /data/version/currently_loaded_release.txt)"
-              #curl -X POST -H "Content-Type: text/plain" -T currently_loaded_release.txt -G "${FUSEKI_URL}/skosmos/data" --data-urlencode graph=https://w3id.org/nfdi4cat/mytextgraph
+
+              # Update check
+              # echo "Run of cronjob at $(date +%H:%M:%S): Has been updated" >> /data/version/log.txt
+
           volumeMounts:
             - mountPath: data/version
               name: version-storage
