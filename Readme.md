@@ -3,18 +3,39 @@
 This repository contains a helm chart to deploy Skosmos inside a Kubernetes cluster.
 The helm chart is based on the procedure to run Skosmos locally with docker from [Skosmos](https://github.com/NatLibFi/Skosmos) GitHub repository.
 
-### How to deploy
+### How to deploy with https
 
 To deploy both backend and frontend, run from the root folder of this repository:
 ```
 helm install <name> \
---set-json='ingress.dns="<name>.qa.km.k8s.zbmed.de"' \
+--set ingress.dns="<name>.qa.km.k8s.zbmed.de" \
+--set ingress.enableSSL="true" \
+--set ingress.certIssuer="letsencrypt-prod" \
 skosmos-backend
 ```
 
-The frontend will be available at `<name>.qa.km.k8s.zbmed.de`.
+The frontend will be available at `https://<name>.qa.km.k8s.zbmed.de`.
 
-The API will be available at `<name>.qa.km.k8s.zbmed.de/rest/v1`
+The API will be available at `https://<name>.qa.km.k8s.zbmed.de/rest/v1`
+
+The services can be terminated by running:
+
+```
+helm uninstall <name>
+```
+
+### How to deploy with http
+
+To deploy both backend and frontend, run from the root folder of this repository:
+```
+helm install <name> \
+--set ingress.dns="<name>.qa.km.k8s.zbmed.de" \
+skosmos-backend
+```
+
+The frontend will be available at `http://<name>.qa.km.k8s.zbmed.de`.
+
+The API will be available at `http://<name>.qa.km.k8s.zbmed.de/rest/v1`
 
 The services can be terminated by running:
 
@@ -34,11 +55,26 @@ backend-vocab-import
 ```
 
 The Voc4Cat vocabulary should now be available.
-Afterwards, the helm chart can be uninstalled again (even if the Skosmos backend shall continue to run):
+Afterward, the helm chart can be uninstalled again (even if the Skosmos backend shall continue to run):
 
 ```
 helm uninstall <otherName>
 ```
+
+### Activate automatic update of Voc4Cat
+
+The Voc4Cat vocabulary can be automatically updated using the helm chart located at `backend-vocab-update/`.
+Having an already running Skosmos backend with the name `<name>` (see above), just run (where `<otherName>` can be chosen arbitrarily, but cannot be the same as `<name>` or any other name that is already used):
+
+```
+helm install <otherName> \
+--set-json='ingress.backendName="<name>"' \
+backend-vocab-update
+```
+
+The Voc4Cat vocabulary will now be checked for new releases every day at midnight.
+
+__Note__: Uninstalling the helm chart with `helm uninstall <otherName>` will stop the cronjob being run periodically.
 
 ### Load vocabularies manually
 
@@ -47,7 +83,7 @@ Expose the service `<name>-fuseki` created with the helm chart (see above).
 kubectl expose deployment <name>-fuseki --type=LoadBalancer --name=<name>-fuseki-exposed
 ```
 
-Obtain the generated external IP. The external IP might be listed as "<pending>" at first, as this might take a while.
+Obtain the generated external IP. The external IP might be listed as "\<pending\>" at first, as this might take a while.
 ```
 kubectl get services <name>-fuseki-exposed
   ```
