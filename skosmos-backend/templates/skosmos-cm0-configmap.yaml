@@ -118,7 +118,8 @@ data:
     dc:subject :cat_general ;
     void:uriSpace "https://nfdi4cat.github.io/voc4cat/latest/voc4cat/index.html";
     skosmos:language "en";
-    skosmos:defaultLanguage "en";
+    skosmos:defaultLanguage "en";    
+    skosmos:groupClass skos:Collection ;
     void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
     skosmos:sparqlGraph <https://w3id.org/nfdi4cat/voc4cat> .
 kind: ConfigMap
