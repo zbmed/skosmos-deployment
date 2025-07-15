@@ -1,0 +1,36 @@
+apiVersion: v1
+entries:
+  backend-vocab-import:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-15T09:08:24.895166329Z"
+    description: A Helm chart to load vocabularies into the (already running) skosmos-backend.
+    digest: f07cfa22bc93000ddb3f9e0bacc5c09c52a3e8f6af6bf1545e765919290ab644
+    name: backend-vocab-import
+    type: application
+    urls:
+    - https://github.com/zbmed/skosmos-deployment/releases/download/backend-vocab-import-0.0.1/backend-vocab-import-0.0.1.tgz
+    version: 0.0.1
+  skosmos-backend:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-15T09:08:25.009766708Z"
+    description: A Helm chart to deploy the skosmos-backend.
+    digest: b8be16de27a5db3c5f5ebb8ef4eb333ffed15a38e5e9437026056174a2c9d43f
+    name: skosmos-backend
+    type: application
+    urls:
+    - https://github.com/zbmed/skosmos-deployment/releases/download/skosmos-backend-0.0.1/skosmos-backend-0.0.1.tgz
+    version: 0.0.1
+  skosmos-ui:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-15T09:08:25.135060965Z"
+    description: A Helm chart to deploy the skosmos-ui.
+    digest: f047bd217d2687643327829b1125f48be0a14f6a2a3d0b22ec14a464a6c84ab3
+    name: skosmos-ui
+    type: application
+    urls:
+    - https://github.com/zbmed/skosmos-deployment/releases/download/skosmos-ui-0.0.1/skosmos-ui-0.0.1.tgz
+    version: 0.0.1
+generated: "2025-07-15T09:08:25.135065784Z"
