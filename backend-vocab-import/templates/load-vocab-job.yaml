@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+#kind: CronJob
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-backend-vocab-import
+spec:
+  #schedule: "0 0 * * *"
+  #successfulJobsHistoryLimit: 0
+  #jobTemplate:
+  #  spec:
+  template:
+    spec:
+      containers:
+        - image: redhat/ubi8
+          name: backend-vocab-import-container
+          env:
+            - name: FUSEKI_URL
+              value: http://{{ .Values.ingress.backendName }}-fuseki:9030
+          command:
+            - sh
+            - -c
+            - |
+              echo "Importing the voc4cat vocabulary"
+              curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
+              curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
+
+              echo "Fetching and storing latest release"
+
+              REPO_NAME="nfdi4cat/voc4cat"
+
+              # Fetch the latest release info from GitHub API
+              RELEASE_INFO=$(curl -s "https://api.github.com/repos/${REPO_NAME}/releases/latest")
+
+              # Extract and clean the release name
+              RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "Release ([^"]+)".*/\1/')
+
+              # Fallback if no "Release " prefix
+              if [[ -z "$RELEASE_NAME" ]]; then
+                RELEASE_NAME=$(echo "$RELEASE_INFO" | grep '"name":' | head -n 1 | sed -E 's/.*"name": "([^"]+)".*/\1/')
+              fi
+
+              # Update the stored version name
+              echo "$RELEASE_NAME" > /data/version/currently_loaded_release.txt
+
+              # Update check
+              # echo "Run of cronjob at $(date +%H:%M:%S): Has been updated" >> /data/version/log.txt
+
+          volumeMounts:
+            - mountPath: data/version
+              name: version-storage
+          resources:
+            requests:
+              memory: 1900Mi
+              cpu: 8m
+            limits:
+              memory: 3800Mi
+              cpu: 16m
+      restartPolicy: Never
+      volumes:
+        - name: version-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.ingress.backendName }}-version-pvc
+  backoffLimit: 1

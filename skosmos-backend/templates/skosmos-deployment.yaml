@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-frontend
+  name: {{ .Release.Name }}-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-frontend
+    spec:
+      containers:
+        - image: ghcr.io/zbmed/skosmos/skosmos:latest
+          name: {{ .Release.Name }}-frontend
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/www/html/config.ttl
+              name: config-volume
+              subPath: config.ttl
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: {{ .Release.Name }}-frontend-config
+          name: config-volume

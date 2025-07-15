@@ -3,6 +3,7 @@ ingress:
   enableSSL:
   certIssuer:
   path: /
+  backendName:
 auth:
   enabled:
   secretName:

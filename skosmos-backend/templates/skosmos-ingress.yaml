@@ -32,7 +32,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: fuseki-cache
+                name: {{ .Release.Name }}-frontend
                 port:
                   number: 80
 {{- end }}
