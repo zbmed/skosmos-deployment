@@ -1,0 +1,12 @@
+ingress:
+  dns:
+  enableSSL:
+  certIssuer:
+  path:
+frontend:
+  image:
+auth:
+  enabled:
+  secretName:
+backend:
+  releaseName:

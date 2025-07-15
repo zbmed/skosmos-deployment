@@ -23,7 +23,7 @@ data:
     skosmos:useApi true ;
     # SPARQL endpoint
     # a local Fuseki server is usually on localhost:3030
-    skosmos:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
+    skosmos:sparqlEndpoint <http://{{ .Values.backend.releaseName }}-fuseki:9030/skosmos/sparql> ;
     # sparql-query extension, or "Generic" for plain SPARQL 1.1
     # set to "JenaText" instead if you use Fuseki with jena-text index
     skosmos:sparqlDialect "JenaText" ;
@@ -99,7 +99,7 @@ data:
     skosmos:showTopConcepts true ;
     skosmos:fullAlphabeticalIndex true ;
     skosmos:groupClass isothes:ConceptGroup ;
-    void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
+    void:sparqlEndpoint <http://{{ .Values.backend.releaseName }}-fuseki:9030/skosmos/sparql> ;
     skosmos:sparqlGraph <http://skos.um.es/unescothes/> .
 
     :stw a skosmos:Vocabulary, void:Dataset ;
@@ -109,7 +109,7 @@ data:
     void:uriSpace "http://zbw.eu/stw/";
     skosmos:language "en", "de";
     skosmos:defaultLanguage "de";
-    void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
+    void:sparqlEndpoint <http://{{ .Values.backend.releaseName }}-fuseki:9030/skosmos/sparql> ;
     skosmos:sparqlGraph <http://zbw.eu/stw/> .
 
     :voc4cat a skosmos:Vocabulary, void:Dataset ;
@@ -120,7 +120,7 @@ data:
     skosmos:language "en";
     skosmos:defaultLanguage "en";    
     skosmos:groupClass skos:Collection ;
-    void:sparqlEndpoint <http://{{ .Release.Name }}-fuseki:9030/skosmos/sparql> ;
+    void:sparqlEndpoint <http://{{ .Values.backend.releaseName }}-fuseki:9030/skosmos/sparql> ;
     skosmos:sparqlGraph <https://w3id.org/nfdi4cat/voc4cat> .
 kind: ConfigMap
 metadata:

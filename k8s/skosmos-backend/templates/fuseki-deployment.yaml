@@ -25,7 +25,7 @@ spec:
           env:
             - name: JAVA_OPTIONS
               value: -Xmx2g -Xms1g
-          image: ghcr.io/zbmed/skosmos/fuseki:5.3.0
+          image: {{ .Values.backend.image }}
           name: {{ .Release.Name }}-fuseki
           ports:
             - containerPort: 3030

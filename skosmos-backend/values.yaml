@@ -1,8 +1,0 @@
-ingress:
-  dns:
-  enableSSL:
-  certIssuer:
-  path: /
-auth:
-  enabled:
-  secretName:

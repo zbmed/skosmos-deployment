@@ -17,7 +17,7 @@ spec:
         app: {{ .Release.Name }}-frontend
     spec:
       containers:
-        - image: ghcr.io/zbmed/skosmos/skosmos:latest
+        - image: {{ .Values.frontend.image }}
           name: {{ .Release.Name }}-frontend
           ports:
             - containerPort: 80

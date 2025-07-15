@@ -5,18 +5,28 @@ The helm chart is based on the procedure to run Skosmos locally with docker from
 
 ### How to deploy with https
 
-To deploy both backend and frontend, run from the root folder of this repository:
+To deploy the backend, run from the root folder of this repository:
 ```
-helm install <name> \
---set ingress.dns="<name>.qa.km.k8s.zbmed.de" \
+helm install <backend-release-name> \
+--set-json='backend.image="ghcr.io/zbmed/skosmos/fuseki:5.3.0"' \
+skosmos-backend
+```
+
+To deploy the frontend, run from the root folder of this repository:
+```
+helm install <frontend-release-name> \
+--set ingress.dns="<frontend-release-name>.qa.km.k8s.zbmed.de" \
+--set-json='frontend.image="ghcr.io/zbmed/skosmos/skosmos:latest"' \
+--set-json='backend.releaseName="<backend-release-name>"' \
+--set-json='ingress.path="/"' \
 --set ingress.enableSSL="true" \
 --set ingress.certIssuer="letsencrypt-prod" \
 skosmos-backend
 ```
 
-The frontend will be available at `https://<name>.qa.km.k8s.zbmed.de`.
+The frontend will be available at `https://<frontend-release-name>.qa.km.k8s.zbmed.de`.
 
-The API will be available at `https://<name>.qa.km.k8s.zbmed.de/rest/v1`
+The API will be available at `https://<frontend-release-name>.qa.km.k8s.zbmed.de/rest/v1`
 
 The services can be terminated by running:
 
