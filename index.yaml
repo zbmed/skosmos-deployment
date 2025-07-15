@@ -11,6 +11,17 @@ entries:
     urls:
     - https://github.com/zbmed/skosmos-deployment/releases/download/backend-vocab-import-0.0.1/backend-vocab-import-0.0.1.tgz
     version: 0.0.1
+  backend-vocab-update:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-07-15T09:10:07.847272177Z"
+    description: A Helm chart to load vocabularies into the (already running) skosmos-backend.
+    digest: 6f015e9933308fc02ec782ba5255a75db96df7089d408364e2a80e6147ddde07
+    name: backend-vocab-update
+    type: application
+    urls:
+    - https://github.com/zbmed/skosmos-deployment/releases/download/backend-vocab-update-0.0.2/backend-vocab-update-0.0.2.tgz
+    version: 0.0.2
   skosmos-backend:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -33,4 +44,4 @@ entries:
     urls:
     - https://github.com/zbmed/skosmos-deployment/releases/download/skosmos-ui-0.0.1/skosmos-ui-0.0.1.tgz
     version: 0.0.1
-generated: "2025-07-15T09:08:25.135065784Z"
+generated: "2025-07-15T09:10:07.847284289Z"
