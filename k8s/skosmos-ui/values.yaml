@@ -3,6 +3,8 @@ ingress:
   enableSSL:
   certIssuer:
   path:
+  pathType:
+  appRoot:
 frontend:
   image:
 auth:
