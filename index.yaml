@@ -36,6 +36,16 @@ entries:
   skosmos-ui:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-07-18T13:44:13.008594466Z"
+    description: A Helm chart to deploy the skosmos-ui.
+    digest: 51550695312e7640ebd04db6dfdc222fe65002c3df60746199d39b5f051799c6
+    name: skosmos-ui
+    type: application
+    urls:
+    - https://github.com/zbmed/skosmos-deployment/releases/download/skosmos-ui-0.0.3/skosmos-ui-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-07-16T14:17:34.900013828Z"
     description: A Helm chart to deploy the skosmos-ui.
     digest: 0f4efaebf14ef4517ca6739a6b4bb484cbbee63322c8b2b4fbd3be7d0dc6c511
@@ -54,4 +64,4 @@ entries:
     urls:
     - https://github.com/zbmed/skosmos-deployment/releases/download/skosmos-ui-0.0.1/skosmos-ui-0.0.1.tgz
     version: 0.0.1
-generated: "2025-07-16T14:17:34.900022294Z"
+generated: "2025-07-18T13:44:13.008606328Z"
