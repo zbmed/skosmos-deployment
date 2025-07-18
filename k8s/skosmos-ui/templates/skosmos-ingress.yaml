@@ -18,7 +18,6 @@ metadata:
     {{- end }}
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.rewriteTarget }}
-    nginx.ingress.kubernetes.io/app-root: {{ .Values.ingress.appRoot }}
 spec:
   {{ if .Values.ingress.enableSSL }}
   tls:
@@ -36,31 +35,6 @@ spec:
             backend:
               service:
                 name: {{ .Release.Name }}-frontend
-                port:
-                  number: 80
-{{- end }}
-
----
-
-{{- if .Values.ingress.dns }}
-{{- $relname := .Release.Name -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Release.Name }}-ingress-redirect
-  annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: {{ .Values.ingress.appRoot }}/
-spec:
-  ingressClassName: "nginx"
-  rules:
-    - host: {{ .Values.ingress.dns }}
-      http:
-        paths:
-          - path: {{ .Values.ingress.appRoot }}
-            pathType: Exact
-            backend:
-              service:
-                name: redirect-dummy
                 port:
                   number: 80
 {{- end }}
