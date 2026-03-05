@@ -5,26 +5,25 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
   annotations:
-    {{ if .Values.ingress.enableSSL }}
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 12k
+    {{- if .Values.ingress.enableSSL }}
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     cert-manager.io/issuer: {{ .Values.ingress.certIssuer | quote}}
-    {{ end }}
-    nginx.ingress.kubernetes.io/proxy-buffer-size: 12k
+    {{- end }}
     {{- if .Values.auth.enabled }}
     nginx.ingress.kubernetes.io/auth-type: "basic"
     nginx.ingress.kubernetes.io/auth-secret: {{ .Values.auth.secretName }}
     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
     {{- end }}
-    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.ingress.rewriteTarget }}
 spec:
-  {{ if .Values.ingress.enableSSL }}
+  {{- if .Values.ingress.enableSSL }}
   tls:
     - hosts:
         - {{ .Values.ingress.dns }}
       secretName: {{ .Release.Name }}-ssl-secret
-  {{ end }}
+  {{- end }}
   ingressClassName: "nginx"
   rules:
     - host: {{ .Values.ingress.dns }}
@@ -34,7 +33,7 @@ spec:
             pathType: {{ .Values.ingress.pathType }}
             backend:
               service:
-                name: {{ .Release.Name }}-frontend
+                name: {{ .Release.Name }}
                 port:
                   number: 80
 {{- end }}

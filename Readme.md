@@ -1,13 +1,14 @@
 # Skosmos Deployment
 
 This repository contains a helm chart to deploy Skosmos inside a Kubernetes cluster.
-The helm chart is based on the procedure to run Skosmos locally with docker from [Skosmos](https://github.com/NatLibFi/Skosmos) GitHub repository.
+The helm chart is based on the procedure to run Skosmos with docker from [Skosmos](https://github.com/NatLibFi/Skosmos) GitHub repository.
 
 ### How to deploy with https
 
 To deploy the backend, run from the root folder of this repository:
 ```
 helm install <backend-release-name> \
+--namespace='zbmed-ts-nfdi4cat' \
 --set-json='backend.image="ghcr.io/zbmed/skosmos/fuseki:5.3.0"' \
 skosmos-backend
 ```
@@ -15,8 +16,9 @@ skosmos-backend
 To deploy the frontend, run from the root folder of this repository:
 ```
 helm install <frontend-release-name> \
+--namespace='zbmed-ts-nfdi4cat' \
 --set ingress.dns="<frontend-release-name>.qa.km.k8s.zbmed.de" \
---set-json='frontend.image="ghcr.io/zbmed/skosmos/skosmos:latest"' \
+--set-json='ui.image="ghcr.io/zbmed/skosmos/skosmos:latest"' \
 --set-json='backend.releaseName="<backend-release-name>"' \
 --set-json='ingress.path="/"' \
 --set ingress.enableSSL="true" \
@@ -39,6 +41,7 @@ helm uninstall <name>
 To deploy both backend and frontend, run from the root folder of this repository:
 ```
 helm install <name> \
+--namespace='ts4nfdi' \
 --set ingress.dns="<name>.qa.km.k8s.zbmed.de" \
 skosmos-backend
 ```
@@ -60,6 +63,7 @@ Having an already running Skosmos backend with the name `<name>` (see above), ju
 
 ```
 helm install <otherName> \
+--namespace='zbmed-ts-nfdi4cat' \
 --set-json='ingress.backendName="<name>"' \
 backend-vocab-import
 ```
@@ -68,7 +72,7 @@ The Voc4Cat vocabulary should now be available.
 Afterward, the helm chart can be uninstalled again (even if the Skosmos backend shall continue to run):
 
 ```
-helm uninstall <otherName>
+helm uninstall <otherName> --namespace='zbmed-ts-nfdi4cat' 
 ```
 
 ### Activate automatic update of Voc4Cat
@@ -78,6 +82,7 @@ Having an already running Skosmos backend with the name `<name>` (see above), ju
 
 ```
 helm install <otherName> \
+--namespace='zbmed-ts-nfdi4cat' \
 --set-json='ingress.backendName="<name>"' \
 backend-vocab-update
 ```

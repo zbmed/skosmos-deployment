@@ -9,6 +9,13 @@ spec:
   #jobTemplate:
   #  spec:
   template:
+    metadata:
+      labels:
+        project: zbmed
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/part-of: ts-nfdi4cat
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/managed-by: Helm
     spec:
       containers:
         - image: redhat/ubi8

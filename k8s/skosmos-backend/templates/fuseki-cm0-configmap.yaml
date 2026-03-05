@@ -4,6 +4,11 @@ metadata:
   name: {{ .Release.Name }}-fuseki-config
   labels:
     app: {{ .Release.Name }}-fuseki
+    project: zbmed
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/part-of: ts-nfdi4cat
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/managed-by: Helm
 data:
   skosmos.ttl: |
     @prefix :      <http://base/#> .

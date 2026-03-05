@@ -2,23 +2,34 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-frontend
-  name: {{ .Release.Name }}-frontend
+    app: {{ .Release.Name }}
+  name: {{ .Release.Name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-frontend
+      app: {{ .Release.Name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-frontend
+        app: {{ .Release.Name }}
+        project: zbmed
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/part-of: ts-nfdi4cat
+        app.kubernetes.io/component: ui
+        app.kubernetes.io/managed-by: Helm
     spec:
       containers:
-        - image: {{ .Values.frontend.image }}
-          name: {{ .Release.Name }}-frontend
+        - image: {{ .Values.ui.image }}
+          name: {{ .Release.Name }}
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              memory: "256Mi"
           ports:
             - containerPort: 80
               protocol: TCP
@@ -29,5 +40,5 @@ spec:
       restartPolicy: Always
       volumes:
         - configMap:
-            name: {{ .Release.Name }}-frontend-config
+            name: {{ .Release.Name }}-config
           name: config-volume

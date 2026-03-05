@@ -129,5 +129,10 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app: {{ .Release.Name }}-frontend-config
-  name: {{ .Release.Name }}-frontend-config
+    app: {{ .Release.Name }}-config
+    project: zbmed
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/part-of: ts-nfdi4cat
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/managed-by: Helm
+  name: {{ .Release.Name }}-config

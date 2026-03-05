@@ -15,10 +15,21 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-fuseki-cache
+        project: zbmed
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/part-of: ts-nfdi4cat
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/managed-by: Helm
     spec:
       containers:
         - image: varnish
           name: {{ .Release.Name }}-fuseki-cache
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
           ports:
             - containerPort: 80
               protocol: TCP

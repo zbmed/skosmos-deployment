@@ -4,11 +4,17 @@ metadata:
   name: {{ .Release.Name }}-backend-vocab-update
 spec:
   schedule: "0 0 * * *" # every day
-  #schedule: "* * * * *" # every minute (for testing purposes)
-  successfulJobsHistoryLimit: 0
+  successfulJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            project: zbmed
+            app.kubernetes.io/instance: {{ .Release.Name }}
+            app.kubernetes.io/part-of: ts-nfdi4cat
+            app.kubernetes.io/component: backend
+            app.kubernetes.io/managed-by: Helm
         spec:
           containers:
             - image: redhat/ubi8
@@ -46,7 +52,14 @@ spec:
                   else
                     # Update the loaded vocabulary
                     echo "Release is outdated. Updating the voc4cat vocabulary..."
+
                     curl -o voc4cat.ttl -L -H "accept:application/x-turtle" https://w3id.org/nfdi4cat/voc4cat
+
+                    # Clear existing graph
+                    curl -X POST -H "Content-Type: application/sparql-update" -d "
+                      CLEAR GRAPH <https://w3id.org/nfdi4cat/voc4cat>
+                      " ${FUSEKI_URL}/skosmos/update
+
                     curl -I -X POST -H Content-Type:text/turtle -T voc4cat.ttl -G ${FUSEKI_URL}/skosmos/data --data-urlencode graph=https://w3id.org/nfdi4cat/voc4cat
 
                     # Update the stored version name
